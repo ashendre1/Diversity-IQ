@@ -1,23 +1,138 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { Chart as ChartJS, ArcElement, CategoryScale, LinearScale, BarElement, Tooltip, Legend } from "chart.js";
+import { Pie, Bar } from "react-chartjs-2";
+import "./App.css";
+
+// Register required components
+ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
 function App() {
+  const [file, setFile] = useState(null);
+  const [responseData, setResponseData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0]);
+  };
+
+  const handleFileUpload = async () => {
+    if (!file) {
+      alert("Please select a file first!");
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      // Mock API response
+      const mockResponse = {
+        gender: {
+          male: 80,
+          female: 20,
+          comment: "The gender distribution is heavily skewed towards males."
+        },
+        ethnicity: {
+          category0: 100,
+          category1: 99,
+          category2: 50,
+          category3: 30,
+          category4: 20
+        },
+        ethnicityComment: "Category 4 is underrepresented with less than 10%."
+      };
+
+      // Simulate API delay
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      // Set the mock response as the response data
+      setResponseData(mockResponse);
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      alert("An error occurred while uploading the file");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const renderCharts = () => {
+    if (!responseData) return null;
+
+    // Extract gender data
+    const genderData = {
+      labels: ["Male", "Female"],
+      datasets: [
+        {
+          data: [responseData.gender.male, responseData.gender.female],
+          backgroundColor: ["#36A2EB", "#FF6384"],
+        },
+      ],
+    };
+
+    // Extract ethnicity data
+    const ethnicityLabels = Object.keys(responseData.ethnicity);
+    const ethnicityValues = Object.values(responseData.ethnicity);
+
+    const ethnicityData = {
+      labels: ethnicityLabels,
+      datasets: [
+        {
+          label: "Ethnicity Distribution",
+          data: ethnicityValues,
+          backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF"],
+        },
+      ],
+    };
+
+    return (
+      <div className="charts-container">
+        {/* Gender Pie Chart */}
+        <div className="chart">
+          <h2>Gender Distribution</h2>
+          <Pie data={genderData} />
+          <p className="chart-comment">{responseData.gender.comment || "No comments available."}</p>
+        </div>
+
+        {/* Ethnicity Bar Chart */}
+        <div className="chart">
+          <h2>Ethnicity Distribution</h2>
+          <Bar data={ethnicityData} />
+          <p className="chart-comment">{responseData.ethnicityComment || "No comments available."}</p>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+      <header className="main-header">
+        <h1>DiversityIQ</h1>
       </header>
+      <div className="App-content">
+        <header className="App-header">
+          <h2>Welcome and upload file</h2>
+          <input
+            type="file"
+            id="file-upload"
+            className="file-input"
+            onChange={handleFileChange}
+          />
+          <label htmlFor="file-upload" className="file-label">
+            {file ? file.name : "Choose File"}
+          </label>
+          <button
+            className={`upload-button ${
+              isLoading ? "upload-button-disabled" : ""
+            }`}
+            onClick={handleFileUpload}
+            disabled={isLoading}
+          >
+            {isLoading ? "Uploading..." : "Upload File"}
+          </button>
+
+          {isLoading && <div className="loading-screen">Loading...</div>}
+          {responseData && !isLoading && renderCharts()}
+        </header>
+      </div>
     </div>
   );
 }

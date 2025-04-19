@@ -1,38 +1,129 @@
 .App {
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+  font-family: 'Arial', sans-serif;
+  background: white;
+  color: black;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  justify-content: flex-start; /* Align content to the top */
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  padding: 10px; /* Reduce padding to move content up */
+}
+
+.main-header {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 10px; /* Reduce margin to move header closer to the top */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.App-content {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 20px; /* Reduce padding to make the box smaller */
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 600px;
+  margin-top: -20px; /* Move the box closer to the header */
+}
+
+.App-header h2 {
+  font-size: 1.8rem;
+  margin-bottom: 15px; /* Adjust spacing for better alignment */
+  color: black;
+}
+
+/* File Input Styling */
+.file-input {
+  display: none; /* Hide the default file input */
+}
+
+.file-label {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #ffffff;
+  color: #2575fc;
+  border: 2px solid #2575fc;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.file-label:hover {
+  background-color: #2575fc;
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+/* Upload Button Styling */
+.upload-button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background-color: #ffffff;
+  color: #2575fc;
+  border: 2px solid #2575fc;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-@keyframes App-logo-spin {
+.upload-button:hover {
+  background-color: #2575fc;
+  color: white;
+}
+
+.upload-button-disabled {
+  background-color: #cccccc;
+  color: #666666;
+  border-color: #cccccc;
+  cursor: not-allowed;
+}
+
+/* Loading Screen */
+.loading-screen {
+  margin-top: 20px;
+  font-size: 1.2rem;
+  color: #ffffff;
+  font-weight: bold;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
   from {
-    transform: rotate(0deg);
+    opacity: 0;
   }
   to {
-    transform: rotate(360deg);
+    opacity: 1;
   }
+}
+
+/* Chart Container */
+.charts-container {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.chart {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.chart h2 {
+  margin-bottom: 20px;
+  color: black;
+}
+
+.chart-comment {
+  margin-top: 15px;
+  font-size: 1rem;
+  color: black;
+  font-style: italic;
 }
