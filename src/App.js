@@ -35,8 +35,7 @@ function App() {
           category0: 100,
           category1: 99,
           category2: 50,
-          category3: 30,
-          category4: 20
+          category3: 30
         },
         ethnicityComment: "Category 4 is underrepresented with less than 10%."
       };
@@ -54,21 +53,56 @@ function App() {
     }
   };
 
+  // const handleFileUpload = async () => {
+  //   if (!file) {
+  //     alert("Please select a file first!");
+  //     return;
+  //   }
+
+  //   const formData = new FormData();
+  //   formData.append("file", file);
+
+  //   setIsLoading(true);
+
+  //   try {
+  //     const response = await fetch("http://localhost:8000/upload", {
+  //       method: "POST",
+  //       body: formData,
+  //     });
+
+  //     if (response.ok) {
+  //       const data = await response.json();
+  //       setResponseData(data);
+  //     } else {
+  //       alert("Failed to upload file");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error uploading file:", error);
+  //     alert("An error occurred while uploading the file");
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
   const renderCharts = () => {
     if (!responseData) return null;
 
     // Extract gender data
+    const genderLabels = Object.keys(responseData.gender).filter((key) => key !== "comment");
+    const genderValues = genderLabels.map((label) => responseData.gender[label]);
+    
     const genderData = {
-      labels: ["Male", "Female"],
+      labels: genderLabels,
       datasets: [
         {
-          data: [responseData.gender.male, responseData.gender.female],
+          label: "Gender Distribution",
+          data: genderValues,
           backgroundColor: ["#36A2EB", "#FF6384"],
         },
       ],
     };
 
-    // Extract ethnicity data
+    //Extract ethnicity data
     const ethnicityLabels = Object.keys(responseData.ethnicity);
     const ethnicityValues = Object.values(responseData.ethnicity);
 
@@ -109,7 +143,7 @@ function App() {
       </header>
       <div className="App-content">
         <header className="App-header">
-          <h2>Welcome and upload file</h2>
+          <h2>Check the diversity of your dataset</h2>
           <input
             type="file"
             id="file-upload"
