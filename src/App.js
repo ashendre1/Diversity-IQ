@@ -15,36 +15,30 @@ function App() {
     setFile(event.target.files[0]);
   };
 
+
   const handleFileUpload = async () => {
     if (!file) {
       alert("Please select a file first!");
       return;
     }
 
+    const formData = new FormData();
+    formData.append("file", file);
+
     setIsLoading(true);
 
     try {
-      // Mock API response
-      const mockResponse = {
-        gender: {
-          male: 80,
-          female: 20,
-          comment: "The gender distribution is heavily skewed towards males."
-        },
-        ethnicity: {
-          category0: 100,
-          category1: 99,
-          category2: 50,
-          category3: 30
-        },
-        ethnicityComment: "Category 4 is underrepresented with less than 10%."
-      };
+      const response = await fetch("http://localhost:8000/upload", {
+        method: "POST",
+        body: formData,
+      });
 
-      // Simulate API delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Set the mock response as the response data
-      setResponseData(mockResponse);
+      if (response.ok) {
+        const data = await response.json();
+        setResponseData(data);
+      } else {
+        alert("Failed to upload file");
+      }
     } catch (error) {
       console.error("Error uploading file:", error);
       alert("An error occurred while uploading the file");
@@ -52,37 +46,6 @@ function App() {
       setIsLoading(false);
     }
   };
-
-  // const handleFileUpload = async () => {
-  //   if (!file) {
-  //     alert("Please select a file first!");
-  //     return;
-  //   }
-
-  //   const formData = new FormData();
-  //   formData.append("file", file);
-
-  //   setIsLoading(true);
-
-  //   try {
-  //     const response = await fetch("http://localhost:8000/upload", {
-  //       method: "POST",
-  //       body: formData,
-  //     });
-
-  //     if (response.ok) {
-  //       const data = await response.json();
-  //       setResponseData(data);
-  //     } else {
-  //       alert("Failed to upload file");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error uploading file:", error);
-  //     alert("An error occurred while uploading the file");
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
 
   const renderCharts = () => {
     if (!responseData) return null;
@@ -128,7 +91,7 @@ function App() {
 
         {/* Ethnicity Bar Chart */}
         <div className="chart">
-          <h2>Ethnicity Distribution</h2>
+          <h2>Ethnicity Distribution </h2>
           <Bar data={ethnicityData} />
           <p className="chart-comment">{responseData.ethnicityComment || "No comments available."}</p>
         </div>
